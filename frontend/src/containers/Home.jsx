@@ -1,87 +1,87 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../assets/img/loading.gif';
-import postImage from '../assets/img/newspaper-icon-png.jpg';
-import PostForm from '../components/Posts/PostForm';
-import Post from '../components/Posts/Post';
-import { fetchPosts } from '../reducks/posts/operations';
-import { getPosts } from '../reducks/posts/selectors';
+import React,{useEffect,useState} from "react";
+import Card from "../components/Common/Card";
+import API from "../API";
+import {Link} from 'react-router-dom'
 
-const Home = () => {
-    const dispatch = useDispatch();
-    const selector = useSelector(state => state);
-    const posts = getPosts(selector);
-    let [page, setPage] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        dispatch(fetchPosts({ page }));
-        // eslint-disable-next-line
-    }, []);
+function Home(){
+    const [images,setImages]=useState({results:[]});
+    const [tag,setTag]=useState([]);
+    const [current,setCurrent]=useState(1);
+    const [search,setSearch]=useState('')
 
-    // Infinite Scroll Pagination Flow
-    const observer = useRef();
+    useEffect(()=>{
+        const api=new API();
+        api.getTags()
+        .then(res=>setTag(res.results))
+        .catch(err=>console.log('err',err))
+    },[])
 
-    // Reference to a very last post element
-    const lastPostElement = useCallback(
-        node => {
-            if (isLoading) return;
-            // Disconnect reference from previous element, so that new last element is hook up correctly
-            if (observer.current) {
-                observer.current.disconnect();
-            }
+    useEffect(()=>{
+        const api= new API();
+        if(current!==1){
+            api.getImages(current)
+            .then(res=>{
+                let prevResult=images.results
+                res.results.map((element)=>{
+                    prevResult.push(element)
+                })
+                setImages({...images,result:prevResult,next:res.next})
+            })
+            .catch(err=>console.log('err',err))
+        }
+        else{
+           
+            api.getImages(current)
+            .then(res=>setImages(res))
+            .catch(err=>console.log('err',err))
+        }
+      
+    },[current])
 
-            // Observe changes in the intersection of target element
-            observer.current = new IntersectionObserver(async entries => {
-                // That means that we are on the page somewhere, In our case last element of the page
-                if (entries[0].isIntersecting && posts.next) {
-                    // Proceed fetch new page
-                    setIsLoading(true);
-                    setPage(++page);
-                    await dispatch(fetchPosts({ page }));
-                    setIsLoading(false);
-                }
-            });
+    console.log(images);
+    return(
+        <>
+        <section class="bg-section">
+        <div class="overlay">
+           <div style={{boxShadow: '1px 0px 1px grey'}} class="stripe-white" behavior="" direction="">
+             <div class='tag-wrapper'>
+              {tag.map((element,index)=>{
+                  return <Link  style={{marginLeft:20}} to={'/search/'+element.name}><button>{element.name}</button></Link>
+              })}
+              
+               </div>
+   
+              
+              
+           </div> 
+            <div class="content-area">
+               <div class="content-wrapper">
+                    <span id="title1">Find Your</span>
+                    <span id="title2">BackGround</span>
+                    <div class="input-wrapper">
+                        <input value={search} onChange={(e)=>setSearch(e.target.value)} placeholder="Type here..." class="search-area" />
+                        <Link  to={'/search/'+search}><i class="fas fa-search"></i></Link>
+                       </div>
+               </div>
+            </div>
+        </div>
+       </section>
+        <ul class="card-wrapper">
+            {images.results.map((element,index)=>{
+                return <Card  url={element.image} key={element.id}/>
+            })}
+            
+        </ul>
 
-            // Reconnect back with the new last post element
-            if (node) {
-                observer.current.observe(node);
-            }
-        },
-        // eslint-disable-next-line
-        [posts.next]
-    );
-
-    return (
-        <section className="content">
-            <PostForm />
-            <section className="posts">
-                {posts.results.length > 0 ? (
-                    <ul>
-                        {posts.results.map((post, index) => {
-                            return (
-                                <Post
-                                    ref={index === posts.results.length - 1 ? lastPostElement : null}
-                                    key={post.id}
-                                    post={post}
-                                />
-                            );
-                        })}
-                    </ul>
-                ) : (
-                    <div className="no-post">
-                        <img width="72" src={postImage} alt="icon" />
-                        <p>No posts here yet...</p>
-                    </div>
-                )}
-                {isLoading && (
-                    <div className="loading">
-                        <img src={Loading} className="" alt="" />
-                    </div>
-                )}
-            </section>
+        <section class="main">
+           {images.next? <button onClick={()=>setCurrent(current+1)} class='more-btn'>Show more</button>:null}
         </section>
-    );
-};
+
+</>
+
+
+    )
+}
 
 export default Home;

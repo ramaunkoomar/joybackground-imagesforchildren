@@ -1,10 +1,9 @@
-from .models import Post
+from .models import Image
 from rest_framework import serializers
 
 
 class PostSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(allow_null=True)
-
+    
     class Meta:
-        model = Post
+        model = Image
         fields = '__all__'

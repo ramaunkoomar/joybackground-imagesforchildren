@@ -1,10 +1,10 @@
-from .models import Post
+from .models import Tag
 from rest_framework import serializers
 
 
-class PostSerializer(serializers.ModelSerializer):
+class TagSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(allow_null=True)
 
     class Meta:
-        model = Post
+        model =Tag
         fields = '__all__'

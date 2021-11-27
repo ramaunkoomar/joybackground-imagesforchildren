@@ -1,5 +1,8 @@
 from django.apps import AppConfig
 
+from backend.config.settings import DEFAULT_AUTO_FIELD
+
 
 class ImagesConfig(AppConfig):
-    name = 'images'
+    default_auto_fields = 'django.db.models.BigAutoField'
+    name = 'apps.images'

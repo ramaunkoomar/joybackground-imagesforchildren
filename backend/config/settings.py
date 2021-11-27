@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.posts',
+    'apps.images',
+    'apps.tags',
     'cloudinary',
     'django_filters',
 ]
@@ -87,6 +88,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Heroku Database
+"""
 DATABASES = {
     'default': {
         "ENGINE": 'django.db.backends.postgresql',
@@ -96,15 +98,15 @@ DATABASES = {
         "PORT": 5432,
         "PASSWORD": '24b591b39f189a68f0d1a085f40d3a293ae827d05bc3e2f6cb0fec6b3b13848d',
     }
-}
+}"""
 
 # Local Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
+ }
 
 # Heroku PostgreSQL Database
 django_heroku.settings(locals())
@@ -155,12 +157,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 cloudinary.config(
-    cloud_name="techis",
-    api_key="886187759951178",
-    api_secret="WGcWrWfkPlxdOCdlFaLTdjSNtfo",
+    cloud_name="dhh2ivhsq",
+    api_key="531696268767361",
+    api_secret="bMP8ONyekavzCQOZJyD71h7eAKc",
     secure=True
 )
 
+
+"""
+CLOUDINARY_STORAGE={
+    'CLOUD_NAME':'dhh2ivhsq',
+    'API_KEY':'531696268767361',
+    'API_SECRET':'bMP8ONyekavzCQOZJyD71h7eAKc'
+}
+"""
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

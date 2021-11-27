@@ -32,35 +32,47 @@ api.interceptors.request.use(
 );
 
 export default class API {
-    getPosts = params => {
-        return api
-            .get('/posts/', { params })
-            .then(response => {
-                return response.data;
-            })
-            .catch(error => {
-                throw new Error(error);
-            });
-    };
-    addPost = postBody => {
-        const formData = new FormData();
-
-        for (const key in postBody) {
-            formData.append(key, postBody[key]);
+    getImages = async (page=1, search, tagId) => {
+        let url = "/images/?page=" + page;
+        if (tagId) {
+            url += "&tag=" + tagId;
         }
-
-        return api
-            .post('/posts/add/', formData)
-            .then(response => {
+        if (search) {
+            url += "&search" + search;
+        }
+        const images = await api
+            .get(url)
+            .then((response) => {
                 return response.data;
             })
-            .catch(error => {
+            .catch((error) => {
                 throw new Error(error);
             });
-    };
-    deletePost = id => {
-        return api.delete(`/posts/delete/${id}/`).catch(error => {
+        return images;
+    }
+
+    getImage = async (name) => {
+        const images = await api
+          .get("/images/?search="+name)
+          .then((response) => {
+            return response.data;
+          })
+          .catch((error) => {
             throw new Error(error);
-        });
-    };
+          });
+        return images;
+      };
+    
+      getTags = async () => {
+        const tags = await api
+          .get("/tags/")
+          .then((response) => {
+            return response.data;
+          })
+          .catch((error) => {
+            throw new Error(error);
+          });
+        return tags;
+      };
+    
 }

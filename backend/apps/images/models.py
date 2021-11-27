@@ -1,5 +1,5 @@
 from django.db import models
-from backend.apps.tags.models import Tag
+from apps.tags.models import Tag
 from cloudinary.models import CloudinaryField
 
 
