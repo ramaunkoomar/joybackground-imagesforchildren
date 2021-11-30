@@ -96,7 +96,7 @@ export default function Search() {
                 <li key={image.id}>
                   <img
                     src={
-                      "https://res.cloudinary.com/www-techis-io/" + image.image
+                      "https://res.cloudinary.com/dhh2ivhsq/" + image.image
                     }
                     class="image"
                     alt=""

@@ -40,7 +40,7 @@ export default function Favorites() {
                 <div class="favourite-image" key={favourite.id}>
                   <img
                     src={
-                      "https://res.cloudinary.com/www-techis-io/" +
+                      "https://res.cloudinary.com/dhh2ivhsq/" +
                       favourite.image
                     }
                     alt=""

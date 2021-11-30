@@ -46,7 +46,7 @@ function Preview({ setShowPreview, selectedImageId }) {
               {image && (
                 <img
                   src={
-                    "https://res.cloudinary.com/www-techis-io/" + image.image
+                    "https://res.cloudinary.com/dhh2ivhsq/" + image.image
                   }
                   alt=""
                   class="left-image"
@@ -76,7 +76,7 @@ function Preview({ setShowPreview, selectedImageId }) {
                   <p>Preview</p>
                   <img
                     src={
-                      "https://res.cloudinary.com/www-techis-io/" + image.image
+                      "https://res.cloudinary.com/dhh2ivhsq/" + image.image
                     }
                     alt=""
                     class="background"
