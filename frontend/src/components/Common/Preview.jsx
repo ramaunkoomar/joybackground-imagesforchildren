@@ -1,55 +1,99 @@
-import React from 'react'
-import cross from '../../assets/img/icon-cross.svg';
-import left from '../../assets/img/left-preview-image.png';
-import heart from '../../assets/img/icon-heart.svg';
-import bg from '../../assets/img/right-preview-background.png';
-import human from '../../assets/img/right-preview-human.svg';
+import React, { useState, useEffect } from "react";
+import ImgIconCross from "../../assets/img/icon-cross.svg";
+import ImgIconHeart from "../../assets/img/icon-heart.svg";
+import ImgRightPreviewHuman from "../../assets/img/right-preview-human.svg";
+import ImgRightPreviewBottom from "../../assets/img/right-preview-bottom.svg";
+import { getFavourites } from "../../reducks/favourites/selectors";
+import API from "../../API";
+import { useDispatch, useSelector } from "react-redux";
+import { addFavourite } from "../../reducks/favourites/operations";
 
-import preview from '../../assets/img/right-preview-bottom.svg';
+const api = new API();
 
-function Preview(props) {
-    return (
-        
-    <section  class="preview">
-    <div class="preview-black-cover">
-      <img src={cross} alt="" onClick={()=>props.setShow(false)} class="icon-cross" />
-      <div class="preview-main">
-        <div class="preview-main-inner">
-          <div class="left-side">
-            <img   src={'https://res.cloudinary.com/dhh2ivhsq/'+props.data.image} alt="" class="left-image" />
-            <img src={heart} alt="" class="heart" />
-            <div class="black-box-bottom">
-              <p class="one">{props.data.name}</p>
-              <p class="two">
-               {props.data.description}             </p>
-            </div>
-          </div>
+function Preview({ setShowPreview, selectedImageId }) {
+  const dispatch = useDispatch();
+  const selector = useSelector((state) => state);
+  const [image, setImage] = useState(null);
+  const [showFavourite, setShowFavourite] = useState(true);
+  const favourites = getFavourites(selector);
+  useEffect(() => {
+    api
+      .getImage(selectedImageId)
+      .then((image) => {
+        setImage(image);
+      })
+      .catch((error) => {
+        alert("Failed to connect API: /images/:id/");
+      });
+  }, []);
 
-          <div class="right-side">
-            <div class="right-inner">
-              <p>Preview</p>
-              <img
-                src={bg}
-                alt=""
-                class="background"
-              />
-              <div class="inner">
-                <img src={human} alt="" class="human" />
+  const clickFavourite = (image) => {
+    setShowFavourite(false);
+    dispatch(addFavourite(image));
+  };
+  return (
+    <section class="preview">
+      <div class="preview-black-cover">
+        <img
+          src={ImgIconCross}
+          alt=""
+          class="icon-cross"
+          onClick={() => setShowPreview(false)}
+        />
+        <div class="preview-main">
+          <div class="preview-main-inner">
+            <div class="left-side">
+              {image && (
                 <img
-                  src={preview}
+                  src={
+                    "https://res.cloudinary.com/www-techis-io/" + image.image
+                  }
                   alt=""
-                  class="bottom"
+                  class="left-image"
                 />
-              </div>
-            <a  href={'https://res.cloudinary.com/dhh2ivhsq/'+props.data.image} download><button class="download-button">Download</button></a>
+              )}
+              {image &&
+                Object.values(favourites).filter(
+                  (favoriteImage) => image.id == favoriteImage.id
+                ).length === 0 && (
+                  <img
+                    class="heart"
+                    src={ImgIconHeart}
+                    onClick={() => clickFavourite(image)}
+                  />
+                )}
+              {image && (
+                <div class="black-box-bottom">
+                  <p class="one">{image.name}</p>
+                  <p class="two">{image.description}</p>
+                </div>
+              )}
+            </div>
+
+            <div class="right-side">
+              {image && (
+                <div class="right-inner">
+                  <p>Preview</p>
+                  <img
+                    src={
+                      "https://res.cloudinary.com/www-techis-io/" + image.image
+                    }
+                    alt=""
+                    class="background"
+                  />
+                  <div class="inner">
+                    <img src={ImgRightPreviewHuman} alt="" class="human" />
+                    <img src={ImgRightPreviewBottom} alt="" class="bottom" />
+                  </div>
+                  <button class="download-button" onclick="download()">Download</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-    )
+    </section>
+  );
 }
 
 export default Preview;

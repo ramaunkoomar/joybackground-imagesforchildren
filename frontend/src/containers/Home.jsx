@@ -1,87 +1,109 @@
-import React,{useEffect,useState} from "react";
-import Card from "../components/Common/Card";
-import API from "../API";
-import {Link} from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchImages } from "../reducks/images/operations";
+import { getImages, getHasNext } from "../reducks/images/selectors";
+import { getFavourites } from "../reducks/favourites/selectors";
+import {
+  addFavourite,
+  fetchFromLocalStorage,
+} from "../reducks/favourites/operations";
+import ImgMainBackground from "../assets/img/main-background.png";
+import ImgIconSearch from "../assets/img/icon-search.svg";
+import ImgIconHeart from "../assets/img/icon-heart.svg";
+import Preview from "../components/Common/Preview";
+import Header from "../components/Common/Header";
+import Footer from "../components/Common/Footer";
 
+export default function Home() {
+  const dispatch = useDispatch();
+  const selector = useSelector((state) => state);
+  const images = getImages(selector);
+  const hasNext = getHasNext(selector);
+  const [page, setPage] = useState(1);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedImageId, setSelectedImageId] = useState(null);
+  const favourites = getFavourites(selector);
 
-function Home(){
-    const [images,setImages]=useState({results:[]});
-    const [tag,setTag]=useState([]);
-    const [current,setCurrent]=useState(1);
-    const [search,setSearch]=useState('')
+  useEffect(() => {
+    dispatch(fetchFromLocalStorage());
+    dispatch(fetchImages(page));
+    setPage(page + 1);
+  }, []);
 
-    useEffect(()=>{
-        const api=new API();
-        api.getTags()
-        .then(res=>setTag(res.results))
-        .catch(err=>console.log('err',err))
-    },[])
+  const clickImage = (imageId) => {
+    setSelectedImageId(imageId);
+    setShowPreview(true);
+  };
 
-    useEffect(()=>{
-        const api= new API();
-        if(current!==1){
-            api.getImages(current)
-            .then(res=>{
-                let prevResult=images.results
-                res.results.map((element)=>{
-                    prevResult.push(element)
-                })
-                setImages({...images,result:prevResult,next:res.next})
-            })
-            .catch(err=>console.log('err',err))
-        }
-        else{
-           
-            api.getImages(current)
-            .then(res=>setImages(res))
-            .catch(err=>console.log('err',err))
-        }
-      
-    },[current])
+  const clickShowMore = () => {
+    dispatch(fetchImages(page));
+    setPage(page + 1);
+  };
 
-    console.log(images);
-    return(
-        <>
-        <section class="bg-section">
-        <div class="overlay">
-           <div style={{boxShadow: '1px 0px 1px grey'}} class="stripe-white" behavior="" direction="">
-             <div class='tag-wrapper'>
-              {tag.map((element,index)=>{
-                  return <Link  style={{marginLeft:20}} to={'/search/'+element.name}><button>{element.name}</button></Link>
-              })}
-              
-               </div>
-   
-              
-              
-           </div> 
-            <div class="content-area">
-               <div class="content-wrapper">
-                    <span id="title1">Find Your</span>
-                    <span id="title2">BackGround</span>
-                    <div class="input-wrapper">
-                        <input value={search} onChange={(e)=>setSearch(e.target.value)} placeholder="Type here..." class="search-area" />
-                        <Link  to={'/search/'+search}><i class="fas fa-search"></i></Link>
-                       </div>
-               </div>
+  const clickFavourite = (image) => {
+    dispatch(addFavourite(image));
+  };
+  return (
+    <>
+      <Header />
+      {showPreview && (
+        <Preview
+          setShowPreview={setShowPreview}
+          selectedImageId={selectedImageId}
+        />
+      )}
+      <div class="home">
+        <section class="main-visual">
+          <div class="main-background">
+            <div class="black-cover"></div>
+            <img src={ImgMainBackground} alt="" />
+          </div>
+          <div class="main-catch">
+            <p class="text1">Find your</p>
+            <p class="text2">BackGround</p>
+            <div class="searchbox">
+              <form action="/search" method="get">
+                <input placeholder="Type here.." type="text" name="search" />
+                <img src={ImgIconSearch} class="searchimg" />
+              </form>
             </div>
-        </div>
-       </section>
-        <ul class="card-wrapper">
-            {images.results.map((element,index)=>{
-                return <Card  url={element.image} key={element.id}/>
-            })}
-            
-        </ul>
-
-        <section class="main">
-           {images.next? <button onClick={()=>setCurrent(current+1)} class='more-btn'>Show more</button>:null}
+          </div>
         </section>
 
-</>
-
-
-    )
+        <section class="image-list">
+          <ul class="grid">
+            {images &&
+              images.map((image) => (
+                <li key={image.id}>
+                  <img
+                    src={
+                      "https://res.cloudinary.com/www-techis-io/" + image.image
+                    }
+                    class="image"
+                    alt=""
+                    onClick={() => clickImage(image.id)}
+                  />
+                  {image &&
+                    Object.values(favourites).filter(
+                      (favoriteImage) => image.id == favoriteImage.id
+                    ).length === 0 && (
+                      <img
+                        class="icon-heart"
+                        src={ImgIconHeart}
+                        onClick={() => clickFavourite(image)}
+                      />
+                    )}
+                </li>
+              ))}
+          </ul>
+          {hasNext && (
+            <div class="button">
+              <input type="submit" value="Show more" onClick={clickShowMore} />
+            </div>
+          )}
+        </section>
+      </div>
+      <Footer />
+    </>
+  );
 }
-
-export default Home;

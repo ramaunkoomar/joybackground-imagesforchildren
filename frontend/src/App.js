@@ -1,18 +1,18 @@
-import React from 'react';
-import RoutePath from './Router';
-import'./App.css';
-import Header from './components/Common/Header';
-import Home from './containers/Home';
-import Footer from './components/Common/Footer';
+import React from "react";
+import Router from "./Router";
+import "./assets/style.css";
+import Header from "./components/Common/Header";
+import Footer from "./components/Common/Footer";
+import { BrowserRouter } from "react-router-dom";
+
 function App() {
-    return (
-        <>
-        <Header />
-        <RoutePath />
-        <Footer/>
-       
-        </>
-    );
+  return (
+    <>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </>
+  );
 }
 
 export default App;
