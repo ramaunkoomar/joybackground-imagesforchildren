@@ -24,13 +24,6 @@ const api = axios.create({
 //  IMAGES//////////////
 export default class API {
   getImages = async (page, search, tagId) => {
-    // let url = "/images/?page=" + page;
-    // if (tagId) {
-    //   url += "&tag=" + tagId;
-    // }
-    // if (search) {
-    //   url += "&search=" + search;
-    // }
     const images = await api
       .get("/images/", { params: { page, search, tag: tagId } })
       .then((response) => {
