@@ -22,18 +22,18 @@ body {
 .image-list ul li {
   position: relative;
   width: 300px;
-  float: left;
 }
 
 .image-list ul li .image {
   width: 300px;
-  margin: 10px;
+  margin-top: 10px;
+  margin-left: 25%;
   cursor: pointer;
 }
 
 .image-list ul li .icon-heart {
   top: 20px;
-  right: 0;
+  left: 100%;
   position: absolute;
   width: 55px;
   cursor: pointer;
@@ -43,7 +43,7 @@ body {
   width: 15%;
   padding: 10px;
   margin: 20px;
-  margin-left: 40%;
+  margin-left: 43%;
   border-radius: 5px;
   border: none;
   color: rgb(118, 115, 115);
@@ -98,29 +98,46 @@ body {
   .image-list ul {
     grid-template-columns: repeat(2, 1fr);
     padding: 0;
-    width: 95%;
     margin: 100px auto;
   }
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 450px) {
   .image-list ul {
     grid-template-columns: repeat(1, 1fr);
-    padding: 0;
-    width: 70%;
-    margin: 80px;
+    margin: 10px auto;
+  }
+  .image-list ul li .image {
+    margin-left: 0;
+    width: 310px;
   }
 }
-@media screen and (max-width: 400px) {
+/* @media screen and (max-width: 400px) {
   .image-list ul {
     grid-template-columns: repeat(1, 1fr);
     padding: 0;
     width: 82%;
-    margin: 30px;
+    margin: 10px 30px;
   }
-}
-@media screen and (max-width: 600px) {
+} */
+/* @media screen and (max-width: 600px) {
   .image-list .button {
     width: 20%;
+  }
+} */
+
+@media screen and (max-width: 411px){
+
+  .image-list .button input {
+    width: 30%;
+    padding: 8px;
+    margin: 20px;
+    margin-left: 30%;
+    border-radius: 5px;
+    border: none;
+    color: rgb(118, 115, 115);
+    background-color: rgb(216, 244, 1);
+    border: 1px solid;
+    cursor: pointer;
   }
 }
 
@@ -186,12 +203,26 @@ header .logo .button {
   padding: 10px;
   cursor: pointer;
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 450px) {
   header .logo img {
     height: 25px;
+    margin-top: 16px;
   }
 }
 
+@media screen and (max-width: 450px) {
+  header .logo img {
+    height: 25px;
+    margin-top: 16px;
+  }
+  header .navbar ul {
+    width: 80%;
+  }
+
+  header{
+    width: 100%;
+  }
+}
 /****************************
 * FOOTER
 *****************************/
@@ -299,17 +330,24 @@ footer .logo img {
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 411px) {
   .home .main-visual .main-catch .text1 {
     font-size: 30px;
+    margin-top: 5px;
   }
   .home .main-visual .main-catch .text2 {
     font-size: 50px;
   }
   .home .main-visual .main-catch .searchbox input {
-    width: 330px;
+    width: 272px;
   }
 }
+
+
+
+
+
+
 
 /****************************
 * Favorite
@@ -317,12 +355,13 @@ footer .logo img {
 
 .favorite .favourite-images .favourite-image {
   margin: 20px auto;
-  width: 90vw;
+  width: 65%;
 }
 
 .favorite .favourite-images .favourite-buttons {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .favorite .favourite-images .btn {
@@ -498,4 +537,85 @@ footer .logo img {
   left: 10%;
   font-size: 2.3vw;
   top: 80%;
+}
+
+
+@media screen and (max-width: 1024px){
+  .image-list ul li .icon-heart {
+    left: 80%;
+}
+}
+
+@media screen and (max-width: 768px){
+  .home .main-visual .main-catch {
+    position: absolute;
+    top: 25%;
+    left: 18%;
+}
+}
+
+@media screen and (max-width: 450px){
+  .image-list ul li .icon-heart {
+    left: 70%;
+}
+}
+
+@media screen and (max-width: 411px){
+  form{
+    margin-left: -9px;
+  }
+  .home .main-visual .main-catch {
+    position: absolute;
+    top: 25%;
+    left: 15%;
+}
+
+header .navbar li {
+  
+  padding: 4px 26px;
+}
+}
+
+@media screen and (max-width: 360px){
+  form{
+    margin-left: 6px;
+  }
+  .home .main-visual .main-catch {
+    position: absolute;
+    top: 25%;
+    left: 8%;
+}
+}
+
+@media screen and (min-width: 280px) and (max-width: 320px){
+  .image-list ul li .image {
+    width: 280px;
+    margin-top: 10px;
+    margin-left: 0;
+    cursor: pointer;
+}
+
+.home .main-visual .main-background {
+  position: relative;
+  width: 113%;
+}
+
+header{
+  width: 113%;
+}
+
+.image-list ul {
+  grid-template-columns: repeat(1, 1fr);
+  padding: 0;
+  width: 87%;
+  margin: 10px 40px;
+}
+
+.favorite .favourite-images .btn {
+  width: 138px;
+}
+
+.favorite .favourite-images .favourite-buttons {
+  margin-left: 10%;
+}
 }
